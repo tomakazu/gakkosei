@@ -65,3 +65,9 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "dotenv-rails", "~> 3.2", :groups => [:development, :test]
+
+gem "bcrypt", "~> 3.1"
+
+gem "jwt", "~> 3.3"
