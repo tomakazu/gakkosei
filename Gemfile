@@ -71,3 +71,5 @@ gem "dotenv-rails", "~> 3.2", :groups => [:development, :test]
 gem "bcrypt", "~> 3.1"
 
 gem "jwt", "~> 3.3"
+
+gem "aws-sdk-s3", "~> 1.232"
