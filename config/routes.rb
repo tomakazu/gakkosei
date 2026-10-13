@@ -6,4 +6,5 @@ Rails.application.routes.draw do
       resources :videos, only: [:create, :show, :index, :update]
     end
   end
+  get "me", to: "auth#me"
 end
