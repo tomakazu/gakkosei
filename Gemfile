@@ -75,3 +75,7 @@ gem "jwt", "~> 3.3"
 gem "aws-sdk-s3", "~> 1.232"
 
 gem "aws-sdk-mediaconvert", "~> 1.195"
+
+gem "rspec-rails", "~> 7.1", :groups => [:development, :test]
+gem "factory_bot_rails", "~> 6.5", :groups => [:development, :test]
+gem "shoulda-matchers", "~> 7.0", :groups => [:development, :test]
