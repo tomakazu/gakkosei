@@ -2,6 +2,7 @@ class Video < ApplicationRecord
   belongs_to :user
 
   has_one_attached :raw_video
+  has_many :likes, dependent: :destroy
 
   after_commit :trigger_transcoding, on: :create, if: -> { raw_video.attached? }
 
