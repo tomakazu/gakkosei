@@ -1,6 +1,28 @@
 require "rails_helper"
 
 RSpec.describe "Videos API", type: :request do
+
+  describe "GET /api/v1/videos (likes in the feed)" do
+    let(:user)  { create(:user) }
+    let(:other) { create(:user) }
+
+    it "shows likes_count and whether I liked each video" do
+      liked_one   = create(:video, title: "Liked",     user: other_user)
+      unliked_one = create(:video, title: "Not liked", user: other_user)
+
+      create(:like, user: user,       video: liked_one)
+      create(:like, user: other_user, video: liked_one)
+      create(:like, user: other_user, video: unliked_one)
+
+      get "/api/v1/videos", headers: auth_headers(user)
+
+      feed = JSON.parse(response.body).index_by { |v| v["title"] }
+
+      expect(feed["Liked"]).to include("likes_count" => 2, "liked_by_me" => true)
+      expect(feed["Not liked"]).to include("likes_count" => 1, "liked_by_me" => false)
+    end
+  end
+
   let(:user) { create(:user) }
   let(:other_user) { create(:user) }
 

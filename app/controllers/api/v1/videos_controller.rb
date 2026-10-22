@@ -13,19 +13,21 @@ module Api
 
       def show
         video = Video.find(params[:id])
-        render json: video_response(video)
+        render json: video_response(video, liked: liked?(video))
       end
 
       def index
-        videos = Video.public_video.order(created_at: :desc)
-        render json: videos.map { |v| video_response(v) }
+        videos = Video.public_video.order(created_at: :desc).to_a
+        liked_ids = liked_video_ids_for(videos)
+
+        render json: videos.map { |v| video_response(v, liked: liked_ids.include?(v.id)) }
       end
 
       def update
         video = current_user.videos.find_by(id: params[:id])
 
         if video.update(video_params)
-            render json: video_response(video)
+          render json: video_response(video, liked: liked?(video))
         else
             render json: { errors: video.errors.full_messages }, status: :unprocessable_content
         end
@@ -40,7 +42,16 @@ module Api
         params.require(:video).permit(:title, :description, :visibility, :raw_video)
       end
 
-      def video_response(video)
+      private
+      def liked_video_ids_for(videos)
+        current_user.likes.where(video_id: videos.map(&:id)).pluck(:video_id).to_set
+      end
+
+      def liked?(video)
+        current_user.likes.exists?(video: video)
+      end
+
+      def video_response(video, liked: false)
         {
           id: video.id,
           title: video.title,
@@ -48,7 +59,9 @@ module Api
           status: video.status,
           duration_seconds: video.duration_seconds,
           manifest_url: video.manifest_url,
-          view_count: video.view_count
+          view_count: video.view_count,
+          likes_count: video.likes_count,
+          liked_by_me: liked
         }
       end
     end

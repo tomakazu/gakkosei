@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :like do
-    user { nil }
-    video { nil }
+    user
+    video
   end
 end
